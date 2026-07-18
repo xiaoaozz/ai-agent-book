@@ -64,9 +64,26 @@ def _to_openrouter_model(model: str) -> str:
     return "openai/gpt-5.6-luna"
 
 
+def _is_reasoning_model(model: str) -> bool:
+    """gpt-5.x / o1·o3·o4 / kimi-k3 / *reasoner 等推理模型：不接受 temperature=0，
+    直连 gpt-5.x 还需组织实名且工具调用受限，故优先走 OpenRouter。"""
+    m = (model or "").lower()
+    return (m.startswith(("gpt-5", "o1", "o3", "o4"))
+            or m.startswith("kimi-k3")
+            or "reasoner" in m or "thinking" in m)
+
+
 def _use_openrouter(cfg: dict) -> bool:
-    """provider 自己的 Key 缺失、但有 OPENROUTER_API_KEY 时，走 OpenRouter 兜底。"""
-    return (not os.getenv(cfg["key_env"])) and bool(os.getenv("OPENROUTER_API_KEY"))
+    """走 OpenRouter 的两种情形：
+    1) provider 自己的 Key 缺失、但有 OPENROUTER_API_KEY（统一兜底）；
+    2) 目标是 gpt-5.x 且有 OPENROUTER_API_KEY —— 直连 gpt-5.x 需组织实名、
+       且 /chat/completions 工具调用受限，故即便有 OPENAI_API_KEY 也优先 OpenRouter。"""
+    if not os.getenv("OPENROUTER_API_KEY"):
+        return False
+    if not os.getenv(cfg["key_env"]):
+        return True
+    model = os.getenv("LLM_MODEL") or cfg["default_model"]
+    return (model or "").lower().startswith("gpt-5")
 
 
 def get_model() -> str:
@@ -100,5 +117,14 @@ def get_client() -> OpenAI:
     return OpenAI(**kwargs)
 
 
-# 全部 LLM 调用统一使用低温度，保证结果可复现
-TEMPERATURE = float(os.getenv("LLM_TEMPERATURE", "0"))
+# 全部 LLM 调用统一使用低温度，保证结果可复现；
+# 但推理模型（gpt-5.x / o 系列 / kimi-k3 等）只接受默认 temperature=1，
+# 故按当前解析出的模型自动选择默认温度（可用 LLM_TEMPERATURE 显式覆盖）。
+def _default_temperature() -> str:
+    provider = get_provider()
+    cfg = _PROVIDERS.get(provider, _PROVIDERS["openai"])
+    model = os.getenv("LLM_MODEL") or cfg["default_model"]
+    return "1" if _is_reasoning_model(model) else "0"
+
+
+TEMPERATURE = float(os.getenv("LLM_TEMPERATURE", _default_temperature()))
