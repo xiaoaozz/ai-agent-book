@@ -67,7 +67,7 @@ pandoc "${CHAPTERS[@]}" \
     -V classoption=cyan \
     -V classoption=device=normal \
     -V author="Li Bojie" \
-    --metadata title-meta="Deep Understanding of AI Agents: Design Principles and Engineering Practice" \
+    --metadata title-meta="AI Agents குறித்த ஆழமான புரிதல்: வடிவமைப்பு கோட்பாடுகள் மற்றும் பொறியியல் நடைமுறைகள்" \
     --metadata author-meta="Li Bojie" \
     -H preamble.tex \
     -H tamil-fonts.tex \
