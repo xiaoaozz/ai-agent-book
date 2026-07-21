@@ -6,7 +6,7 @@
 
 ## 配套專案
 
-| 專案 | 類型 | 一句話說明 |
+| 專案 | 型別 | 一句話說明 |
 | --- | :--: | --- |
 | [perception-tools](perception-tools/) | ✅ | 感知工具 MCP：網路搜尋、多模態理解、檔案系統、公共資料來源（DuckDuckGo/Open-Meteo/Yahoo/OpenStreetMap），大多無需 API Key |
 | [execution-tools](execution-tools/) | ✅ | 執行工具 MCP：檔案操作、程式碼直譯器、虛擬終端機、外部系統整合，LLM 二次審批防誤操作 |
@@ -18,9 +18,9 @@
 
 > 此外，[`chapter4/docker-compose.yml`](docker-compose.yml) 與 [`chapter4/DOCKER_DEPLOYMENT.md`](DOCKER_DEPLOYMENT.md) 提供了將上述 MCP 工具伺服器容器化部署的參考方案。
 
-## 專案類型說明
+## 專案型別說明
 
-| 圖示 | 類型 | 含義 |
+| 圖示 | 型別 | 含義 |
 | :--: | --- | --- |
 | ✅ | **可獨立執行** | 本倉庫自帶完整程式碼，設定好 API Key 即可執行 |
 | 📖 | **復現指南** | 依賴需自行 `git clone` 的**外部倉庫**（訓練框架、評測基準等） |
