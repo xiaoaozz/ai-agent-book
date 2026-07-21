@@ -10,7 +10,7 @@
 (function () {
   "use strict";
 
-  var cfg = window.config.extra && window.config.extra.languages;
+  var cfg = window.LANG_CONFIG || (window.__config && window.__config.extra && window.__config.extra.languages);
   if (!cfg) return;
 
   // ── helpers ───────────────────────────────────────────────

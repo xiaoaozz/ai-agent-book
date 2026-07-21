@@ -61,6 +61,10 @@
     <div class="lang-tabs-wrap" id="lang-tabs-root"
          role="tablist" aria-label="Language"></div>
 
+    {# Expose language config to the switcher script (extra.* is not in
+       window.__config, so we inject it here). #}
+    <script>window.LANG_CONFIG = {{ config.extra.languages | tojson }};</script>
+
     {% if config.repo_url %}
       <div class="md-header__source">
         {% include "partials/source.html" %}
