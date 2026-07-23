@@ -64,13 +64,20 @@ The book revolves around the core formula **Agent = LLM + Context + Tools**, wit
 
 It is recommended to apply for API keys from several platforms for convenient learning. See [this guide](https://01.me/2025/07/llm-api-setup/) for model selection.
 
-| Platform | Link | Notes |
-| --- | --- | --- |
-| **Kimi** (Moonshot) | <https://platform.moonshot.cn/> | Kimi series, strong in long context and Agent capabilities |
-| **Zhipu GLM** | <https://open.bigmodel.cn/> | GLM-4.6 etc., strong Chinese ability, cost-effective |
-| **Siliconflow** | <https://siliconflow.cn/> | Various open-source models (DeepSeek, Qwen, etc.) |
-| **Krill AI** | <https://www.krill-ai.com/> | One-stop access to major global and China-domestic models (OpenAI, Claude, Gemini, Grok, Kimi, GLM, DeepSeek, Qwen, Minimax), with both global and China mainland access endpoints |
-| **OpenRouter** | <https://openrouter.ai/> | One-stop access to Gemini / Claude / GPT-5 etc., with global access endpoints |
+| Platform | Link | Notes | Access endpoints |
+| --- | --- | --- | --- |
+| **Kimi** (Moonshot) | <https://platform.moonshot.cn/> | Kimi series, strong in long context and Agent capabilities | Mainland China |
+| **Zhipu GLM** | <https://open.bigmodel.cn/> | GLM-4.6 etc., strong Chinese ability, cost-effective | Mainland China |
+| **Siliconflow** | <https://siliconflow.cn/> | Various open-source models (DeepSeek, Qwen, etc.), fast access from mainland China | Mainland China |
+| **DeepSeek** | <https://platform.deepseek.com/> | Official DeepSeek API | Global + Mainland China |
+| **Krill AI** | [www.krill-ai.com](https://www.krill-ai.com/register?invite=Q8D3L35725) | One-stop access to major global and China-domestic models (OpenAI, Claude, Gemini, Grok, Kimi, GLM, DeepSeek, Qwen, Minimax) | Global + Mainland China |
+| **OpenRouter** | <https://openrouter.ai/> | One-stop access to major global and China-domestic models (GPT, Claude, Gemini, Kimi, GLM, DeepSeek, Qwen, etc.) | Global |
+
+## 💎 Sponsors
+
+Thanks to **Krill AI** for sponsoring this project! Krill provides an official, stable, and ultra-fast API relay for GPT / Claude / Gemini and many Chinese models, with enterprise-grade customization, invoicing, and 7×16h dedicated technical support, plus an exclusively adapted WebSocket connection for blazing-fast time to first token.
+
+Krill offers a special deal for readers of this book: register via [this link](https://www.krill-ai.com/register?invite=Q8D3L35725) and enter the promo code "ai-agent-book" when topping up to get 23% off your first Codex plan!
 
 ## 📦 Appendix · Obtaining External Repositories
 
