@@ -126,8 +126,8 @@ def fig1_2():
 
     s.text(W / 2, 30, '上下文消融实验设计', size=FS_TITLE, bold=True)
 
-    # Column headers（顺序与正文实验 1-1 移除顺序一致）
-    components = ['系统提示词', '工具定义', '工具执行结果', '思考过程', '历史消息']
+    # Column headers（标签已缩短以避免溢出）
+    components = ['系统指令', '工具定义', '推理过程', '历史记录', '工具结果']
     comp_w = 105
     comp_gap = 10
     total_comp = len(components) * comp_w + (len(components) - 1) * comp_gap
@@ -146,9 +146,9 @@ def fig1_2():
     conditions = [
         ('完整基线', [True, True, True, True, True], '✓ 正常工作'),
         ('无工具定义', [True, False, True, True, True], '✗ 无法调用工具'),
-        ('无工具执行结果', [True, True, False, True, True], '✗ 盲目循环'),
-        ('无思考过程', [True, True, True, False, True], '△ 决策不连贯'),
-        ('无历史消息', [True, True, True, True, False], '△ 重复操作'),
+        ('无推理过程', [True, True, False, True, True], '△ 决策不连贯'),
+        ('无历史记录', [True, True, True, False, True], '△ 重复操作'),
+        ('无工具结果', [True, True, True, True, False], '✗ 盲目循环'),
     ]
 
     for j, (label, flags, result) in enumerate(conditions):
@@ -392,24 +392,25 @@ def fig1_wf_orchestrator():
     s.rect(270, 105, 280, 38, fill='#e8e8e8', rx=4)
     s.text(410, 124, '"分析 Issue → 定位文件 → 分配子任务"', size=FS_TINY)
 
-    # Workers
+    # Workers（Worker 3 首行较长，字号缩小以避免溢出）
     workers = [
-        (40, 'Worker 1', '修改 auth.py\n添加 OAuth2 支持', '读取/编辑\n文件工具'),
-        (290, 'Worker 2', '修改 api.py\n添加新端点', '读取/编辑\n文件工具'),
-        (540, 'Worker 3', '编写 test_auth.py\n测试用例', '执行测试\n工具'),
+        (40, 'Worker 1', '修改 auth.py\n添加 OAuth2 支持', '读取/编辑\n文件工具', None),
+        (290, 'Worker 2', '修改 api.py\n添加新端点', '读取/编辑\n文件工具', None),
+        (540, 'Worker 3', '编写 test_auth.py\n测试用例', '执行测试\n工具', FS_SMALL - 1),
     ]
 
     wy = 220
     ww = 230
     wh = 55
-    for wx, title, task, tools in workers:
-        s.box(wx, wy, ww, wh, f'{title}：{task}', fill='light', font_size=FS_SMALL)
+    for wx, title, task, tools, first_fs in workers:
+        s.box(wx, wy, ww, wh, f'{title}：{task}', fill='light', font_size=FS_SMALL,
+              first_line_font_size=first_fs)
         s.box(wx + 20, wy + wh + 10, ww - 40, 40, tools, fill='code_bg', font_size=FS_TINY)
         s.arrow(410, 157, wx + ww / 2, wy - 2)
 
     # Synthesize
     s.box(260, 370, 300, 55, '编排器：合并结果 → 验证一致性', fill='medium', font_size=FS_SMALL)
-    for wx, _, _, _ in workers:
+    for wx, _, _, _, _ in workers:
         s.arrow(wx + ww / 2, wy + wh + 52, 410, 368)
 
     s.save(f'{OUT}/fig1-8.svg')
