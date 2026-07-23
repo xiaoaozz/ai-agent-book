@@ -20,7 +20,7 @@
 - [✨ Quick Start](#-quick-start)
 - [📊 Training Process Details](#-training-process-details)
 - [🔍 Important Concept Explanations](#-important-concept-explanations)
-- [⚠️ Notes](#important-notes)
+- [⚠️ Notes](#-important-notes)
 - [🌻 Acknowledgments](#-acknowledgments)
 - [📨 Contact](#-contact)
 - [📝 TODO](#-todo)

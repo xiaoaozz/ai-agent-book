@@ -581,7 +581,7 @@ def collect_trajectories(self):
         # 2. Model generates action (inference)
         with torch.no_grad():
             # Process 4 street view images
-            obs_image = convert_to_2x2_grid(obs)  # [2400, 2400, 3]
+            obs_image = convert_to_2x2_grid(obs)  # [2405, 2405, 3]
 
             # VLM forward pass
             values, io_dict, output_text, action_log_prob, action_tokens = \
@@ -1466,6 +1466,7 @@ class VLMPolicy(nn.Module):
         Returns:
             values: new value estimates
             action_log_probs: new log probabilities
+            entropy: policy distribution entropy (for the exploration bonus)
         """
         # 1. Forward pass with gradients
         outputs = self.base(
@@ -1483,7 +1484,11 @@ class VLMPolicy(nn.Module):
 
         action_log_probs = self._compute_log_probs(logits, output_ids)
 
-        return values, action_log_probs
+        # 4. Compute policy entropy over the generated tokens
+        dist = torch.distributions.Categorical(logits=logits)
+        entropy = dist.entropy().mean()
+
+        return values, action_log_probs, entropy
 ```
 
 ### 11.5 DeepSpeed ZeRO Distributed Training Principles
@@ -1618,7 +1623,7 @@ GPU 1:
    ```
 
 2. **Parameter Synchronization**
-   ```
+   ```text
    ZeRO-2 does not partition model parameters. Each GPU retains a complete
    parameter replica while optimizer states and gradients are sharded.
    ```
@@ -1708,7 +1713,8 @@ downcast_bf16: 'yes'
 **Advantages of BF16**:
 - ✓ Memory halved: 44 GB → 22 GB
 - ✓ Computation accelerated: ~2× on H800
-- ✓ Large dynamic range: Same as FP32 (prevents overflow)- ✓ No loss scaling needed (simpler than FP16)
+- ✓ Large dynamic range: Same as FP32 (prevents overflow)
+- ✓ No loss scaling needed (simpler than FP16)
 
 **Training Flow**:
 
@@ -3056,7 +3062,7 @@ def collect_trajectories(self):
         # 2. 模型生成动作（inference）
         with torch.no_grad():
             # 处理 4 张街景图片
-            obs_image = convert_to_2x2_grid(obs)  # [2400, 2400, 3]
+            obs_image = convert_to_2x2_grid(obs)  # [2405, 2405, 3]
             
             # VLM 前向传播
             values, io_dict, output_text, action_log_prob = \
@@ -3807,9 +3813,10 @@ def ppo_update(self, rollouts, next_value):
             advantage = advantages[sample_idx]
             
             # 2. 重新评估（带梯度）
-            new_value, new_action_log_prob = actor_critic.evaluate_actions(
+            new_value, new_action_log_prob, entropy = actor_critic.evaluate_actions(
                 **obs_batch['io_dict']
             )
+            entropy_loss = -entropy.mean()
             
             # 3. Compute probability ratio
             ratio = torch.exp(new_action_log_prob - old_action_log_prob)
@@ -3940,6 +3947,7 @@ class VLMPolicy(nn.Module):
         Returns:
             values: 新的 value 估计
             action_log_probs: 新的 log 概率
+            entropy: 策略分布的熵（用于 exploration bonus）
         """
         # 1. Forward pass with gradients
         outputs = self.base(
@@ -3957,7 +3965,11 @@ class VLMPolicy(nn.Module):
         
         action_log_probs = self._compute_log_probs(logits, output_ids)
         
-        return values, action_log_probs
+        # 4. 计算生成 token 上的策略熵
+        dist = torch.distributions.Categorical(logits=logits)
+        entropy = dist.entropy().mean()
+        
+        return values, action_log_probs, entropy
 ```
 
 ### 11.5 DeepSpeed ZeRO 分布式训练原理
