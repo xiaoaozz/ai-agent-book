@@ -1085,7 +1085,7 @@ TRL 提供与 LoRA 相同的监督微调功能，但具有更加用户友好的 
 **解决方案：**
 1. 将`per_device_train_batch_size`从4减少到2或1
 2. 将`max_length`从2048减少到1024或512
-3.增加`gradient_accumulation_steps`以保持有效的批量大小
+3. 增加`gradient_accumulation_steps`以保持有效的批量大小
 4. 将 `lora_rank` 从 32 减少到 16 或 8
 
 **替代方案：使用较小的模型**
@@ -1103,19 +1103,19 @@ TRL 提供与 LoRA 相同的监督微调功能，但具有更加用户友好的 
 
 如果数据生成失败或缓慢：
 
-1.增加`tensor_parallel_size`以使用更多GPU
-2.使用H100x8的并行脚本：`bash create_data_h100x8.sh`
+1. 增加`tensor_parallel_size`以使用更多GPU
+2. 使用H100x8的并行脚本：`bash create_data_h100x8.sh`
 3. 减少测试数据集大小
-4.使用`nvidia-smi`检查GPU内存使用情况
+4. 使用`nvidia-smi`检查GPU内存使用情况
 
 ### 训练不收敛
 
 如果模型无法学习：
 
-1.验证训练数据格式是否正确
+1. 验证训练数据格式是否正确
 2. 检查示例是否具有有效的语言标签
-3.尝试增加训练epoch数
-4.调整学习率（尝试5e-5或2e-4）
+3. 尝试增加训练epoch数
+4. 调整学习率（尝试5e-5或2e-4）
 
 ## 引文
 
